@@ -1,5 +1,4 @@
-// const regexC = /C \d \d(\r?\n)|$/;
-const regexOther = /^C \d+ \d+(\r?\n|$)/;
+const validate = require('./validate');
 const text = `C 20 4
 L 1 2 6 2
 L1 6 3 6 4
@@ -8,7 +7,6 @@ B1 10 3 23`;
 
 describe('validate', () => {
   it('should ', () => {
-    // expect(regexC.test(text)).toBeTruthy();
-    expect(regexOther.test(text)).toBeTruthy();
+    expect(validate(text)).toBeTruthy();
   });
 });
