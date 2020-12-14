@@ -16,19 +16,16 @@ app.use(cors());
 app.use(bodyParser.text({ defaultCharset: 'utf-8' }));
 
 app.post('/upload/:file', async (req, res, next) => {
- const { params } = req;
- const { file } = params;
-
- const result = [];
-
  try {
   if (!validate(req.body)) {
     res.statusCode = 400;
+
     throw new Error('incorrect content of file');
   }
   const result = await handleRequest(req.body);
   res.send(result);
  } catch (e) {
+   console.log('error', e);
    res.send({
      message: e.message
    });

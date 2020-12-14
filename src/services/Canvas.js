@@ -51,31 +51,64 @@ class Canvas {
     return this.canvas;
   }
 
-  bucketFill(options) {
-    const x = +options[0];
-    const y = +options[1];
-    const c = options[2];
-    let i = +y - 1;
-    let j = +x - 1;
-    const helper = (i, j) => {
-      if(i < 0 || j < 0 || i > this.canvas.length - 1 || j > this.canvas[0].length - 1) {
-        return;
-      }
-
-      if (this.canvas[i][j] === c) {
-        return;
-      } else if (this.canvas[i][j] !== EMPTY_CELL) {
-        return;
-      } else {
-        this.canvas[i][j] = c;
-      }
-
-      helper(i + 1, j);
-      helper(i - 1, j);
-      helper(i, j - 1);
-      helper(i, j + 1);
+  isFillabel(i, j, c) {
+    if(i < 0 || j < 0 || i > this.canvas.length - 1 || j > this.canvas[0].length - 1) {
+      return false;
     }
-    helper(i, j);
+
+    if (this.canvas[i][j] === c) {
+      return false;
+    }
+
+    if (this.canvas[i][j] !== EMPTY_CELL) {
+      return false;
+    }
+
+    return true;
+  };
+
+  bucketFill(options) {
+    const c = options[2];
+    let i = +options[1] - 1;
+    let j = +options[0] - 1;
+
+    let queue = [];
+    queue.push([i, j]);
+    const marked = {};
+
+    while(queue.length) {
+      const [x, y] = queue.shift();
+
+      this.canvas[x][y] = c;
+
+      const eastX = x + 1;
+      const eastY = y;
+      if (this.isFillabel(eastX, eastY, c) && !marked[`${eastX}, ${eastY}`]) {
+        marked[`${eastX}, ${eastY}`] = true;
+        queue.push([eastX, eastY]);
+      }
+
+      const westX = x - 1;
+      const westY = y;
+      if (this.isFillabel(westX, westY, c) && !marked[`${westX}, ${westY}`]) {
+        marked[`${westX}, ${westY}`] = true;
+        queue.push([westX, westY]);
+      }
+
+      const northX = x;
+      const northY = y + 1;
+      if (this.isFillabel(northX, northY, c) && !marked[`${northX}, ${northY}`]) {
+        marked[`${northX}, ${northY}`] = true;
+        queue.push([northX, northY]);
+      }
+
+      const southX = x;
+      const southY = y - 1;
+      if (this.isFillabel(southX, southY, c) && !marked[`${southX}, ${southY}`]) {
+        marked[`${southX}, ${southY}`] = true;
+        queue.push([southX, southY]);
+      }
+    }
 
     return this.canvas;
   }
