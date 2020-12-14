@@ -66,7 +66,7 @@ class Canvas {
 
     return true;
   };
-
+  // BFS
   bucketFill(options) {
     const c = options[2];
     let i = +options[1] - 1;
